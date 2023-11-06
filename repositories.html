@@ -1,7 +1,7 @@
     <!doctype html>
 <html lang="en" data-bs-theme="auto">
 <head>
-    <script src="/js/theme.js"></script>
+    <script src="js/theme.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -154,9 +154,9 @@
             <a class="navbar-brand" href="index.html">Refactoring Dependencies</a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/repositories.html">Repositories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/refactorings.html">Refactorings</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="repositories.html">Repositories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="refactorings.html">Refactorings</a></li>
                     <li class="nav-item"><a class="nav-link" href="https://drive.google.com/file/d/1Ix8BUk0yTLdf8CgoCykEcKWc62aTW3Qz/view?usp=drive_link">Download dataset</a></li>
                 </ul>
             </div>
@@ -205,32 +205,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
     <script>
-        d3.csv('/data/repopushbyyear.csv')
+        d3.csv('data/repopushbyyear.csv')
             .then(function(data){
                 makeChart(data,"chart1","year","count");
             });
         
-         d3.csv('/data/repocreationbyyear.csv')
+         d3.csv('data/repocreationbyyear.csv')
             .then(function(data){
                 makeChart(data,"chart2","year","count");
             });
         
-         d3.csv('/data/repoupdatebyyear.csv')
+         d3.csv('data/repoupdatebyyear.csv')
             .then(function(data){
                 makeChart(data,"chart3","year","count");
             });
         
-         d3.csv('/data/reposize.csv')
+         d3.csv('data/reposize.csv')
             .then(function(data){
                 makeChart(data,"chart4","size","count");
             });
         
-         d3.csv('/data/repocommits.csv')
+         d3.csv('data/repocommits.csv')
             .then(function(data){
                 makeChart(data,"chart5","buckets","count");
             });
         
-         d3.csv('/data/repocommitters.csv')
+         d3.csv('data/repocommitters.csv')
             .then(function(data){
                 makeChart(data,"chart6","buckets","count");
             });
