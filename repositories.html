@@ -180,7 +180,7 @@
                     <canvas id="chart3" height="300"></canvas>
                 </div>
                 <div class="col">
-                    <h1>Repositories total size</h1>
+                    <h1>Repositories domains</h1>
                     <canvas id="chart4" height="300"></canvas>
                 </div>
             </div>
@@ -196,6 +196,12 @@
                     <canvas id="chart6" height="800"></canvas>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <h1>Repositories total size</h1>
+                    <canvas id="chart7" height="200"></canvas>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -207,33 +213,39 @@
     <script>
         d3.csv('data/repopushbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart1","year","count");
+                makeChart(data,"chart1","year","count","pie");
             });
         
          d3.csv('data/repocreationbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart2","year","count");
+                makeChart(data,"chart2","year","count","pie");
             });
         
          d3.csv('data/repoupdatebyyear.csv')
             .then(function(data){
-                makeChart(data,"chart3","year","count");
+                makeChart(data,"chart3","year","count","pie");
             });
         
          d3.csv('data/reposize.csv')
             .then(function(data){
-                makeChart(data,"chart4","size","count");
+                makeChart(data,"chart7","size","count","horizontalBar");
             });
         
          d3.csv('data/repocommits.csv')
             .then(function(data){
-                makeChart(data,"chart5","buckets","count");
+                makeChart(data,"chart5","buckets","count","horizontalBar");
             });
         
          d3.csv('data/repocommitters.csv')
             .then(function(data){
-                makeChart(data,"chart6","buckets","count");
+                makeChart(data,"chart6","buckets","count","horizontalBar");
             });
+        
+         d3.csv('data/repositoriesbydomain.csv')
+            .then(function(data){
+                makeChart(data,"chart4","domain","count","pie");
+            });
+
 
 
         function getRandomColor() {
@@ -245,7 +257,12 @@
             return color;
         }
     
-        function makeChart(data,ch,k0,k1) {
+        function makeChart(data,ch,k0,k1,type) {
+            var haveLabel = false;
+            
+            if(type=="pie")
+                haveLabel = true;
+            
             data.sort((a, b) => a[k0] - b[k0]);
             
             var bg_colors = data.map(function (d) {
@@ -260,12 +277,12 @@
             });
             
             var chart = new Chart(ch, {
-                type: "horizontalBar",
+                type: type,
                 options: {
                     maintainAspectRatio: true,
                     responsive: true,
                     legend: {
-                        display: false
+                        display: haveLabel
                     }
                 },
                 data: {

@@ -163,17 +163,77 @@
         </div>
     </nav>
     <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <div class="row">
-                <div class="col">
-                    <h1>Refactoring types</h1>
-                    <canvas id="chart1" height="700"></canvas>
-                </div>
-                <div class="col">
-                    <h1>Refactorings per year</h1>
-                    <canvas id="chart2" height="700"></canvas>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#desktop-tab-pane" type="button" role="tab" aria-controls="desktop-tab-pane" aria-selected="false">Desktop</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mobile-tab" data-bs-toggle="tab" data-bs-target="#mobile-tab-pane" type="button" role="tab" aria-controls="mobile-tab-pane" aria-selected="false">Mobile</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="web-tab" data-bs-toggle="tab" data-bs-target="#web-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Web</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Refactoring types</h1>
+                        <canvas id="chart1" height="700"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Refactorings per year</h1>
+                        <canvas id="chart2" height="700"></canvas>
+                    </div>
                 </div>
             </div>
+          </div>
+          <div class="tab-pane fade" id="desktop-tab-pane" role="tabpanel" aria-labelledby="desktop-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Refactoring types</h1>
+                        <canvas id="chart3" height="700"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Refactorings per year</h1>
+                        <canvas id="chart4" height="700"></canvas>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="mobile-tab-pane" role="tabpanel" aria-labelledby="mobile-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Refactoring types</h1>
+                        <canvas id="chart5" height="700"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Refactorings per year</h1>
+                        <canvas id="chart6" height="700"></canvas>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="web-tab-pane" role="tabpanel" aria-labelledby="web-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Refactoring types</h1>
+                        <canvas id="chart7" height="700"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Refactorings per year</h1>
+                        <canvas id="chart8" height="700"></canvas>
+                    </div>
+                </div>
+            </div>
+          </div>
         </div>
     </main>
 
@@ -185,11 +245,38 @@
     <script>
         d3.csv('data/refactoringtypes.csv')
             .then(function(data){
-                makeChart(data,"chart1","refactoringname","count");
+                makeChart(data,"chart1","refactoringname","count","horizontalBar");
             });
         d3.csv('data/refactoringsbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart2","year","count");
+                makeChart(data,"chart2","year","count","horizontalBar");
+            });
+        
+        d3.csv('data/desktoprefactoringtypes.csv')
+            .then(function(data){
+                makeChart(data,"chart3","refactoringname","count","horizontalBar");
+            });
+        d3.csv('data/desktoprefactoringsbyyear.csv')
+            .then(function(data){
+                makeChart(data,"chart4","year","count","horizontalBar");
+            });
+        
+        d3.csv('data/mobilerefactoringtypes.csv')
+            .then(function(data){
+                makeChart(data,"chart5","refactoringname","count","horizontalBar");
+            });
+        d3.csv('data/mobilerefactoringsbyyear.csv')
+            .then(function(data){
+                makeChart(data,"chart6","year","count","horizontalBar");
+            });
+        
+        d3.csv('data/webrefactoringtypes.csv')
+            .then(function(data){
+                makeChart(data,"chart7","refactoringname","count","horizontalBar");
+            });
+        d3.csv('data/webrefactoringsbyyear.csv')
+            .then(function(data){
+                makeChart(data,"chart8","year","count","horizontalBar");
             });
         
         function getRandomColor() {
@@ -202,7 +289,12 @@
         }
         
     
-        function makeChart(data,ch,k0,k1) {
+        function makeChart(data,ch,k0,k1,type) {
+            var haveLabel = false;
+            
+            if(type=="pie")
+                haveLabel = true;
+            
             data.sort((a, b) => a[k0] - b[k0]);
             
             var bg_colors = data.map(function (d) {
@@ -217,12 +309,12 @@
             });
             
             var chart = new Chart(ch, {
-                type: "horizontalBar",
+                type: type,
                 options: {
                     maintainAspectRatio: true,
                     responsive: true,
                     legend: {
-                        display: false
+                        display: haveLabel
                     }
                 },
                 data: {
