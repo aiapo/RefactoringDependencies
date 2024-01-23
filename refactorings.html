@@ -183,11 +183,13 @@
                 <div class="row">
                     <div class="col">
                         <h1>Refactoring types</h1>
-                        <canvas id="chart1" height="700"></canvas>
+                        <canvas id="chart1" height="200"></canvas>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
                         <h1>Refactorings per year</h1>
-                        <canvas id="chart2" height="700"></canvas>
+                        <canvas id="chart2" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -197,11 +199,13 @@
                 <div class="row">
                     <div class="col">
                         <h1>Refactoring types</h1>
-                        <canvas id="chart3" height="700"></canvas>
+                        <canvas id="chart3" height="200"></canvas>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
                         <h1>Refactorings per year</h1>
-                        <canvas id="chart4" height="700"></canvas>
+                        <canvas id="chart4" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -211,11 +215,13 @@
                 <div class="row">
                     <div class="col">
                         <h1>Refactoring types</h1>
-                        <canvas id="chart5" height="700"></canvas>
+                        <canvas id="chart5" height="200"></canvas>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
                         <h1>Refactorings per year</h1>
-                        <canvas id="chart6" height="700"></canvas>
+                        <canvas id="chart6" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -225,11 +231,13 @@
                 <div class="row">
                     <div class="col">
                         <h1>Refactoring types</h1>
-                        <canvas id="chart7" height="700"></canvas>
+                        <canvas id="chart7" height="200"></canvas>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
                         <h1>Refactorings per year</h1>
-                        <canvas id="chart8" height="700"></canvas>
+                        <canvas id="chart8" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -238,45 +246,44 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+    
     <script>
         d3.csv('data/refactoringtypes.csv')
             .then(function(data){
-                makeChart(data,"chart1","refactoringname","count","horizontalBar");
+                makeChart(data,"chart1","refactoringname","count","bar");
             });
         d3.csv('data/refactoringsbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart2","year","count","horizontalBar");
+                makeChart(data,"chart2","year","count","bar");
             });
         
         d3.csv('data/desktoprefactoringtypes.csv')
             .then(function(data){
-                makeChart(data,"chart3","refactoringname","count","horizontalBar");
+                makeChart(data,"chart3","refactoringname","count","bar");
             });
         d3.csv('data/desktoprefactoringsbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart4","year","count","horizontalBar");
+                makeChart(data,"chart4","year","count","bar");
             });
         
         d3.csv('data/mobilerefactoringtypes.csv')
             .then(function(data){
-                makeChart(data,"chart5","refactoringname","count","horizontalBar");
+                makeChart(data,"chart5","refactoringname","count","bar");
             });
         d3.csv('data/mobilerefactoringsbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart6","year","count","horizontalBar");
+                makeChart(data,"chart6","year","count","bar");
             });
         
         d3.csv('data/webrefactoringtypes.csv')
             .then(function(data){
-                makeChart(data,"chart7","refactoringname","count","horizontalBar");
+                makeChart(data,"chart7","refactoringname","count","bar");
             });
         d3.csv('data/webrefactoringsbyyear.csv')
             .then(function(data){
-                makeChart(data,"chart8","year","count","horizontalBar");
+                makeChart(data,"chart8","year","count","bar");
             });
         
         function getRandomColor() {
@@ -288,6 +295,10 @@
             return color;
         }
         
+        var colors = [];
+        for(i=0;i<100;i++){
+            colors.push(getRandomColor());
+        }
     
         function makeChart(data,ch,k0,k1,type) {
             var haveLabel = false;
@@ -297,9 +308,9 @@
             
             data.sort((a, b) => a[k0] - b[k0]);
             
-            var bg_colors = data.map(function (d) {
-                return getRandomColor();
-            });
+            //var bg_colors = data.map(function (d) {
+            //    return colors[]
+            //});
             
             var x = data.map(function (d) {
                 return d[k0];
@@ -321,14 +332,14 @@
                     labels: x,
                     datasets: [
                         {
+                            logarithmic: false,
                             data: y,
-                            backgroundColor: bg_colors
+                            backgroundColor: colors
                         }
                     ]
                 }
             });
         }
     </script>
-
 </body>
 </html>

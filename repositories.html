@@ -187,13 +187,13 @@
             <div class="row">
                 <div class="col">
                     <h1>Repository commits</h1>
-                    <p>(binned eg. 0-300)</p>
-                    <canvas id="chart5" height="800"></canvas>
+                    <p>(binned eg. 0-1000)</p>
+                    <canvas id="chart5" height="400"></canvas>
                 </div>
                 <div class="col">
                     <h1>Repository committers</h1>
-                    <p>(binned eg. 0-2)</p>
-                    <canvas id="chart6" height="800"></canvas>
+                    <p>(binned eg. 0-100)</p>
+                    <canvas id="chart6" height="400"></canvas>
                 </div>
             </div>
             <div class="row">
@@ -203,13 +203,13 @@
                 </div>
             </div>
         </div>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+    
     <script>
         d3.csv('data/repopushbyyear.csv')
             .then(function(data){
@@ -228,25 +228,23 @@
         
          d3.csv('data/reposize.csv')
             .then(function(data){
-                makeChart(data,"chart7","size","count","horizontalBar");
+                makeChart(data,"chart7","size","count","bar");
             });
         
          d3.csv('data/repocommits.csv')
             .then(function(data){
-                makeChart(data,"chart5","buckets","count","horizontalBar");
+                makeChart(data,"chart5","bin_end","count","bar");
             });
         
          d3.csv('data/repocommitters.csv')
             .then(function(data){
-                makeChart(data,"chart6","buckets","count","horizontalBar");
+                makeChart(data,"chart6","bin_end","count","bar");
             });
         
          d3.csv('data/repositoriesbydomain.csv')
             .then(function(data){
                 makeChart(data,"chart4","domain","count","pie");
             });
-
-
 
         function getRandomColor() {
             var letters = '0123456789ABCDEF'.split('');
@@ -255,6 +253,11 @@
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
+
+        var colors = [];
+        for(i=0;i<100;i++){
+            colors.push(getRandomColor());
         }
     
         function makeChart(data,ch,k0,k1,type) {
@@ -265,9 +268,9 @@
             
             data.sort((a, b) => a[k0] - b[k0]);
             
-            var bg_colors = data.map(function (d) {
-                return getRandomColor();
-            });
+            //var bg_colors = data.map(function (d) {
+            //    return colors[]
+            //});
             
             var x = data.map(function (d) {
                 return d[k0];
@@ -289,8 +292,9 @@
                     labels: x,
                     datasets: [
                         {
+                            logarithmic: false,
                             data: y,
-                            backgroundColor: bg_colors
+                            backgroundColor: colors
                         }
                     ]
                 }
