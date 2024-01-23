@@ -8,6 +8,7 @@
     <title>Repository stats | Refactoring Dependencies</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <meta name="theme-color" content="#712cf9">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" />
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -163,52 +164,77 @@
         </div>
     </nav>
     <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <div class="row">
-                <div class="col">
-                    <h1>Repositories pushed per year</h1>
-                    <canvas id="chart1" height="300"></canvas>
-                </div>
-                <div class="col">
-                    <h1>Repositories created per year</h1>
-                    <canvas id="chart2" height="300"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <h1>Repositories updated per year</h1>
-                    <canvas id="chart3" height="300"></canvas>
-                </div>
-                <div class="col">
-                    <h1>Repositories domains</h1>
-                    <canvas id="chart4" height="300"></canvas>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true">Information</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats-tab-pane" type="button" role="tab" aria-controls="stats-tab-pane" aria-selected="false">Statistics/Analysis</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Repositories</h1>
+                        <div id="repositories-table"></div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <h1>Repository commits</h1>
-                    <p>(binned eg. 0-1000)</p>
-                    <canvas id="chart5" height="400"></canvas>
+          </div>
+          <div class="tab-pane fade" id="stats-tab-pane" role="tabpanel" aria-labelledby="stats-tab" tabindex="0">
+            <div class="bg-body-tertiary p-5 rounded">
+                <div class="row">
+                    <div class="col">
+                        <h1>Repositories pushed per year</h1>
+                        <canvas id="chart1" height="300"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Repositories created per year</h1>
+                        <canvas id="chart2" height="300"></canvas>
+                    </div>
                 </div>
-                <div class="col">
-                    <h1>Repository committers</h1>
-                    <p>(binned eg. 0-100)</p>
-                    <canvas id="chart6" height="400"></canvas>
+                <div class="row">
+                    <div class="col">
+                        <h1>Repositories updated per year</h1>
+                        <canvas id="chart3" height="300"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Repositories domains</h1>
+                        <canvas id="chart4" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h1>Repository commits</h1>
+                        <p>(binned eg. 0-1000)</p>
+                        <canvas id="chart5" height="400"></canvas>
+                    </div>
+                    <div class="col">
+                        <h1>Repository committers</h1>
+                        <p>(binned eg. 0-100)</p>
+                        <canvas id="chart6" height="400"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h1>Repositories total size</h1>
+                        <canvas id="chart7" height="200"></canvas>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <h1>Repositories total size</h1>
-                    <canvas id="chart7" height="200"></canvas>
-                </div>
-            </div>
+          </div>
         </div>
+
 
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
     
     <script>
         d3.csv('data/repopushbyyear.csv')
@@ -245,7 +271,12 @@
             .then(function(data){
                 makeChart(data,"chart4","domain","count","pie");
             });
-
+        
+         d3.csv('data/repositories.csv')
+            .then(function(data){
+                makeTable(data,"repositories-table");
+            });
+        
         function getRandomColor() {
             var letters = '0123456789ABCDEF'.split('');
             var color = '#';
@@ -299,6 +330,19 @@
                     ]
                 }
             });
+        }
+        
+        function makeTable(data,table){
+            console.log(data);
+            new gridjs.Grid({
+                data: data,
+                pagination: {
+                    limit: 5
+                },
+                resizable: true,
+                search: true,
+                sort: true
+            }).render(document.getElementById(table));
         }
     </script>
 
